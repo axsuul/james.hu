@@ -23,6 +23,9 @@ job "web" {
         # Only james.hu or www.james.hu will route here
         "traefik.http.routers.james-hu-web.rule=Host(`james.hu`, `www.james.hu`)",
 
+        # Use custom middleware to redirect www to non-www
+        "traefik.http.routers.james-hu-web.middlewares=redirect-www@file",
+
         # Even though entrypoint is https, traffic comes in as plain http
         "traefik.http.routers.james-hu-web.entrypoints=https",
 
@@ -30,12 +33,12 @@ job "web" {
         "traefik.http.routers.james-hu-web.tls.certresolver=letsencrypt",
       ]
 
-      # check {
-      #   type     = "http"
-      #   path     = "/"
-      #   interval = "30s"
-      #   timeout  = "10s"
-      # }
+      check {
+        type = "http"
+        path = "/"
+        interval = "30s"
+        timeout = "10s"
+      }
     }
 
     task "server" {
@@ -58,15 +61,8 @@ job "web" {
           }
 
           http {
-            # server {
-            #   server_name www.james.hu;
-
-            #   return 301 https://james.hu$request_uri;
-            # }
-
             server {
               listen 80;
-              # server_name james.hu;
 
               location / {
                 root /srv;
