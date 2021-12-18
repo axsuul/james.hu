@@ -1,9 +1,9 @@
 # james.hu
 
-## Setup
-Install Docker on Ubuntu. Uses the Dockerfile `dockerfile/ghost`. Clone repo into `/srv/james.hu`.
+## Deployment
 
-## Run
-```
-$ docker run -d -p 80:2368 -v /srv/james.hu:/ghost-override dockerfile/ghost
+Using the Sublime Text SFTP plugin, it should sync all files in `nomad/` to `/srv/james-hu/nomad` on [Subspace](axsuul/subspace). Then on the server, run each Nomad task.
+
+```shell
+nomad run /srv/james-hu/nomad/jobs/web.hcl
 ```
